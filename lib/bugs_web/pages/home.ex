@@ -5,11 +5,18 @@ defmodule BugsWeb.Pages.Home do
     ~H"""
     <h1>Bug Example</h1>
     <button
+      class={[
+        "hidden my-6 bg-blue-500 hover:bg-blue-600",
+        "justify-center px-3 py-2 rounded text-lg text-white transition-colors"
+      ]}
+      id="secret_third_button"
+    >
+      Third button
+    </button>
+
+    <button
       id="disabled_btn"
-      on_error={
-        JS.hide(to: "#disabled_btn")
-        |> JS.show(to: "#active_button", display: "inline-block")
-      }
+      on_error={JS.show(to: "#secret_third_button", display: "inline-block")}
       class={[
         "rounded-md my-6 text-lg",
         "text-white transition-colors",
@@ -26,9 +33,9 @@ defmodule BugsWeb.Pages.Home do
         "justify-center px-3 py-2 rounded text-lg text-white transition-colors"
       ]}
       phx-click={
-        JS.dispatch("trigger_bug")
-        |> JS.hide(to: "#active_button")
+        JS.hide(to: "#active_button")
         |> JS.show(to: "#disabled_btn", display: "inline-block")
+        |> JS.dispatch("trigger_bug")
       }
     >
       Trigger Bug!
