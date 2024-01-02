@@ -17,7 +17,7 @@ defmodule BugsWeb.Router do
   scope "/", BugsWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    live("/", Pages.Home)
   end
 
   # Other scopes may use custom stacks.

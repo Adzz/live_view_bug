@@ -25,6 +25,32 @@ import topbar from "../vendor/topbar"
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}})
 
+window.addEventListener("trigger_bug", (event) => {
+  console.log("Bug triggered");
+  window.dispatchEvent(
+    new CustomEvent(
+      "phx:js-exec", {
+        bubbles: true, cancelable: true,
+        detail: {
+          to: "[on_error]",
+          attr: "on_error"
+        }
+      }
+    )
+  );
+})
+
+window.addEventListener("phx:js-exec", ({ detail }) => {
+  console.log("JS exec handler triggered");
+
+  document.querySelectorAll(detail.to).forEach(el => {
+    console.log("JS exec element found, executing JS...");
+    console.log("Attr executing:", el.getAttribute(detail.attr));
+
+    liveSocket.execJS(el, el.getAttribute(detail.attr));
+  })
+})
+
 // Show progress bar on live navigation and form submits
 topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})
 window.addEventListener("phx:page-loading-start", _info => topbar.show(300))
